@@ -39,7 +39,7 @@ def get_complement(nucleotide):
     elif(nucleotide == 'G'):
         return 'C'
     else:
-        return ''
+        return False
     # or use dictionary?
     # how do i replace the list's element after setting up the dictionary?
 
@@ -147,9 +147,8 @@ def find_all_ORFs_both_strands(dna):
     ['ATGCGAATG', 'ATGCTACATTCGCAT']
     """
     result = find_all_ORFs(dna)
-    result1 = get_reverse_complement(dna)
+    result1 = find_all_ORFs(get_reverse_complement(dna))
     return result + result1
-
 
 def longest_ORF(dna):
     """ Finds the longest ORF on both strands of the specified DNA and returns it
@@ -202,5 +201,5 @@ def gene_finder(dna):
 
 if __name__ == "__main__":
     import doctest
-    # doctest.testmod(verbose=True)
-    doctest.run_docstring_examples(find_all_ORFs_both_strands, globals())
+    doctest.testmod(verbose=True)
+    # doctest.run_docstring_examples(find_all_ORFs_both_strands, globals())
