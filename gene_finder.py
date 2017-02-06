@@ -9,6 +9,7 @@ Gene_Finder
 import random
 from amino_acids import aa, codons, aa_table   # you may find these useful
 from load import load_seq
+# test = load_seq("./data/X73525.fa")
 
 
 def shuffle_string(s):
@@ -150,14 +151,15 @@ def find_all_ORFs_both_strands(dna):
     result1 = find_all_ORFs(get_reverse_complement(dna))
     return result + result1
 
+
 def longest_ORF(dna):
     """ Finds the longest ORF on both strands of the specified DNA and returns it
         as a string
     >>> longest_ORF("ATGCGAATGTAGCATCAAA")
     'ATGCTACATTCGCAT'
     """
-    # TODO: implement this
-    pass
+    # finding longest string of "find all ORFs both strands(dna)"
+    return max(find_all_ORFs_both_strands(dna))
 
 
 def longest_ORF_noncoding(dna, num_trials):
@@ -167,8 +169,12 @@ def longest_ORF_noncoding(dna, num_trials):
         dna: a DNA sequence
         num_trials: the number of random shuffles
         returns: the maximum length longest ORF """
-    # TODO: implement this
-    pass
+    maxi = 0
+    for i in range(0, num_trials):
+        if len(longest_ORF(shuffle_string(dna))) > max:
+            maxi = len(longest_ORF(shuffle_string(dna)))
+        # update the max value, length of longest ORF off shuffled string
+    return maxi
 
 
 def coding_strand_to_AA(dna):
@@ -185,8 +191,14 @@ def coding_strand_to_AA(dna):
         >>> coding_strand_to_AA("ATGCCCGCTTT")
         'MPA'
     """
-    # TODO: implement this
-    pass
+    # recall string of amino acids from aa_table
+    # return a string of codon
+    codon = ''
+    for i in range(0, len(dna)-(len(dna) % 3), 3):
+        # range(start,stop,step)
+        codon = codon + aa_table[dna[i:i+3]]
+        i += 3
+    return codon
 
 
 def gene_finder(dna):
@@ -195,11 +207,21 @@ def gene_finder(dna):
         dna: a DNA sequence
         returns: a list of all amino acid sequences coded by the sequence dna.
     """
-    # TODO: implement this
-    pass
-
+    dna_list = find_all_ORFs_both_strands(dna)
+    # threshold = longest_ORF_noncoding(dna, 1500)
+    threshold = 200
+    amino_list = []
+    for i in dna_list:
+        amino = coding_strand_to_AA(i)
+        if len(amino) > threshold:
+            amino_list.append(amino)
+    return amino_list
+# i have to put elements of the dna_list into coding_strand_to_AA
 
 if __name__ == "__main__":
+    # gene_finder(test)
+
     import doctest
     doctest.testmod(verbose=True)
-    # doctest.run_docstring_examples(find_all_ORFs_both_strands, globals())
+
+    # doctest.run_docstring_examples(coding_strand_to_AA, globals())
